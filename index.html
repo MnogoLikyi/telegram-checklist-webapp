@@ -1,12 +1,54 @@
-<script>
-  document.querySelector("form").addEventListener("submit", function (e) {
-    e.preventDefault();
-    const textarea = document.querySelector("textarea").value;
-    const data = { text: textarea };
-
-    if (window.Telegram.WebApp) {
-      window.Telegram.WebApp.sendData(JSON.stringify(data));
-      window.Telegram.WebApp.close();
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <title>Редактировать задачу</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
     }
-  });
-</script>
+    textarea {
+      width: 100%;
+      height: 150px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Задача</h2>
+  <textarea id="taskInput" placeholder="Введите комментарий или заметку..."></textarea><br />
+  <button onclick="sendData()">Сохранить</button>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const list = urlParams.get("list");
+    const item = urlParams.get("item");
+
+    function sendData() {
+      const text = document.getElementById("taskInput").value.trim();
+      if (!text) {
+        alert("Поле задачи не может быть пустым.");
+        return;
+      }
+
+      const data = {
+        list: parseInt(list),
+        item: parseInt(item),
+        text: text
+      };
+
+      Telegram.WebApp.sendData(JSON.stringify(data));
+    }
+
+    Telegram.WebApp.ready();
+  </script>
+</body>
+</html>
